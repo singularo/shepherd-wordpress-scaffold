@@ -95,11 +95,11 @@ class Handler
         $root = $this->getWordpressRootPath();
 
         // Assume Wordpress scaffold created the wp-config.php
-        $this->filesystem->chmod($root . '/wp-config.php', 0664);
+        if (file_exists($root . '/wp-config.php')) {
+            $this->filesystem->chmod($root . '/wp-config.php', 0664);
+        }
 
-        // If we haven't already written to wp-config.php.
-        if (!(strpos(file_get_contents($root . '/wp-config.php'), 'START SHEPHERD CONFIG') !== false)) {
-            $shepherdSettings = "
+        $shepherdSettings = "
 <?php
 /**
  * The base configuration for WordPress
@@ -193,12 +193,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once( ABSPATH . 'wp-settings.php' );
 ";
 
-            // Write Shepherd-specific wp-config.php.
-            file_put_contents(
-                $root.'/wp-config.php',
-                $shepherdSettings
-            );
-        }
+        // Write Shepherd-specific wp-config.php.
+        file_put_contents(
+            $root.'/wp-config.php',
+            $shepherdSettings
+        );
     }
 
     /**
