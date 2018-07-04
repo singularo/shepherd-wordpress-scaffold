@@ -1,0 +1,24 @@
+{
+    "name":        "singularo/shepherd-wordpress-scaffold",
+    "description": "Composer Plugin for updating the Shepherd Wordpress tools.",
+    "type":        "composer-plugin",
+    "license": "GPL-2.0+",
+    "require": {
+        "php": ">=7.0",
+        "composer-plugin-api": "^1.1",
+        "composer/semver": "^1.4",
+        "symfony/filesystem": "~3.0"
+    },
+    "config": {
+        "bin-dir": "bin/",
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "UniversityOfAdelaide\\ShepherdWordpressScaffold\\": "src/"
+        }
+    },
+    "extra": {
+        "class": "UniversityOfAdelaide\\ShepherdWordpressScaffold\\Plugin"
+    }
+}
