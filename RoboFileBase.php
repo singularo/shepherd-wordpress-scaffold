@@ -32,7 +32,7 @@ abstract class RoboFileBase extends \Robo\Tasks {
    * Initialize config variables and apply overrides.
    */
   public function __construct() {
-    $this->wp_cli_cmd = "$this->wp_cli_bin -r $this->application_root";
+    $this->wp_cli_cmd = "$this->wp_cli_bin --path=$this->application_root";
     $this->sudo_cmd = posix_getuid() == 0 ? '' : 'sudo';
     $this->local_user = $this->getLocalUser();
 
@@ -72,6 +72,7 @@ abstract class RoboFileBase extends \Robo\Tasks {
     $config['site']['admin_email']      = getenv('SITE_ADMIN_EMAIL');
     $config['site']['admin_user']       = getenv('SITE_ADMIN_USERNAME');
     $config['site']['admin_password']   = getenv('SITE_ADMIN_PASSWORD');
+    $config['site']['url']              = getenv('VIRTUAL_HOST');
 
     // Environment.
     $config['environment']['hash_salt']       = getenv('HASH_SALT');
@@ -163,7 +164,11 @@ abstract class RoboFileBase extends \Robo\Tasks {
     $this->devConfigWriteable();
 
     // @TODO: When is this really used? Automated builds - can be random values.
-    $successful = $this->_exec("$this->wp_cli_cmd core install")
+    $successful = $this->_exec("$this->wp_cli_cmd core install" .
+        " --admin_email=\"" . $this->config['site']['admin_email'] . "\"" .
+        " --admin_user=\"" .  $this->config['site']['admin_user'] . "\"" .
+        " --title=\"" .       $this->config['site']['title'] . "\"" .
+        " --url=\"" .         $this->config['site']['url'] . "\"")
       ->wasSuccessful();
 
     // Re-set settings.php permissions.
